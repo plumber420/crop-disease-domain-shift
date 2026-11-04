@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch checkpoints and training outputs
+experiments/
+outputs/
+*.pt
+*.pth
+*.ckpt
+
+# SLURM logs
+slurm/logs/
+*.out
+*.err
+
+# Datasets & virtualenvs
+datasets/
+venvs/
+.venv/
+env/
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+*.zip
+datasets/
+__pycache__/
+.cache/
