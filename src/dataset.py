@@ -111,7 +111,7 @@ class MappedCropDataset(Dataset):
         allowed_classes: Optional[List[str]] = None,
         samples_file_list: Optional[List[str]] = None,
     ):
-        self.root_dir = Path(root_dir)
+        self.root_dir = Path(os.path.expandvars(os.path.expanduser(str(root_dir))))
         self.domain = domain
         self.transform = transform
         self.canonical_to_id = get_canonical_name_to_id()
@@ -228,8 +228,8 @@ def get_or_create_dataset_splits(
     Returns:
         Dict with keys: 'train', 'val', 'test_pv', 'metadata'
     """
-    pv_path = Path(pv_dir).resolve()
-    manifest_file = Path(manifest_path).resolve()
+    pv_path = Path(os.path.expandvars(os.path.expanduser(str(pv_dir)))).resolve()
+    manifest_file = Path(os.path.expandvars(os.path.expanduser(str(manifest_path)))).resolve()
 
     if manifest_file.exists():
         try:
@@ -466,7 +466,7 @@ class SoftTargetCrossEntropy(nn.Module):
 
 def build_dataloaders(
     pv_dir: str = "data/PlantVillage",
-    pd_dir: Optional[str] = "data/plantdoc",
+    pd_dir: Optional[str] = "data/PlantDoc",
     split_manifest_path: Optional[str] = "data/dataset_splits.json",
     batch_size: int = 32,
     num_workers: int = 4,
@@ -484,6 +484,8 @@ def build_dataloaders(
     - test_pv_loader: PlantVillage in-domain test split
     - test_pd_loader: PlantDoc out-of-domain field target set (if pd_dir provided)
     """
+    pv_dir = os.path.expandvars(os.path.expanduser(pv_dir))
+    pd_dir = os.path.expandvars(os.path.expanduser(pd_dir)) if pd_dir else None
     num_classes = len(get_canonical_class_list())
     
     train_transform = get_transforms(img_size=img_size, is_training=True, heavy_aug=heavy_aug)

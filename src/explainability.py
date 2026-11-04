@@ -427,7 +427,7 @@ def parse_args():
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to model checkpoint (.pt)")
     parser.add_argument("--model_name", type=str, default="resnet50", choices=["resnet50", "swin_t"], help="Architecture ('resnet50' or 'swin_t')")
     parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage directory (Lab domain)")
-    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc directory (Field domain)")
+    parser.add_argument("--pd_dir", type=str, default="data/PlantDoc", help="Path to PlantDoc directory (Field domain)")
     parser.add_argument("--image_path", type=str, default="", help="Optional single image path for targeted attribution")
     parser.add_argument("--output_dir", type=str, default="experiments/gradcam_analysis", help="Directory to save visual explanations")
     parser.add_argument("--num_samples", type=int, default=6, help="Number of random samples to visualize per domain")
@@ -436,6 +436,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.pv_dir = os.path.expandvars(os.path.expanduser(args.pv_dir))
+    args.pd_dir = os.path.expandvars(os.path.expanduser(args.pd_dir))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

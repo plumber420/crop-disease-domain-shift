@@ -301,8 +301,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     },
     "tomato_spider_mites": {
         "pv_candidates": [
-            "Tomato_Spider_mites_Two_spotted_spider_mites",
             "Tomato_Spider_mites_Two_spotted_spider_mite",
+            "Tomato_Spider_mites_Two_spotted_spider_mites",
             "Tomato___Spider_mites Two-spotted_spider_mite",
             "Tomato_spider_mites",
             "Tomato___Spider_mites"
@@ -316,8 +316,9 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     },
     "tomato_mosaic_virus": {
         "pv_candidates": [
-            "Tomato___Tomato_mosaic_virus",
             "Tomato__Tomato_mosaic_virus",
+            "Tomato_Tomato_mosaic_virus",
+            "Tomato___Tomato_mosaic_virus",
             "Tomato_mosaic_virus",
             "tomato_mosaic_virus"
         ],
@@ -330,10 +331,10 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     },
     "tomato_yellow_leaf_curl_virus": {
         "pv_candidates": [
-            "Tomato_Tomato_YellowLeaf__Curl_Virus",
             "Tomato__Tomato_YellowLeaf__Curl_Virus",
-            "Tomato_Tomato_Yellow_Leaf_Curl_Virus",
+            "Tomato_Tomato_YellowLeaf__Curl_Virus",
             "Tomato__Tomato_Yellow_Leaf_Curl_Virus",
+            "Tomato_Tomato_Yellow_Leaf_Curl_Virus",
             "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
             "Tomato_yellow_leaf_curl_virus",
             "tomato_yellow_leaf_curl_virus"
@@ -449,14 +450,14 @@ def build_dataset_mapping_dict(dataset_dir: str, domain: str = "auto") -> Dict[s
     to their canonical integer class ID [0, C-1].
     Any folders not matching an overlapping canonical class are excluded.
     """
-    path = Path(dataset_dir)
-    if not path.is_dir():
-        raise FileNotFoundError(f"Directory not found: {dataset_dir}")
+    expanded_path = Path(os.path.expandvars(os.path.expanduser(dataset_dir)))
+    if not expanded_path.is_dir():
+        raise FileNotFoundError(f"Directory not found: {dataset_dir} (resolved to {expanded_path})")
         
     canonical_to_id = get_canonical_name_to_id()
     folder_to_id: Dict[str, int] = {}
     
-    subdirs = _get_target_folders(path)
+    subdirs = _get_target_folders(expanded_path)
     for subdir in subdirs:
         canonical = resolve_folder_to_canonical(subdir.name, domain=domain)
         if canonical is not None:
@@ -473,9 +474,10 @@ def verify_dataset_alignment(
     """
     Inspects directories of both datasets, verifies overlapping classes,
     counts images per class, and reports domain alignment statistics.
+    Directly supports nested split subfolders ('train', 'test', 'val') in PlantDoc.
     """
-    pv_path = Path(pv_dir)
-    pd_path = Path(pd_dir)
+    pv_path = Path(os.path.expandvars(os.path.expanduser(pv_dir)))
+    pd_path = Path(os.path.expandvars(os.path.expanduser(pd_dir)))
     
     canonical_to_id = get_canonical_name_to_id()
     id_to_canonical = get_id_to_canonical_name()
@@ -483,19 +485,35 @@ def verify_dataset_alignment(
     pv_counts: Dict[str, int] = {k: 0 for k in canonical_to_id.keys()}
     pd_counts: Dict[str, int] = {k: 0 for k in canonical_to_id.keys()}
     
-    valid_exts = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+    valid_exts = {'.jpg', '.jpeg', '.png', '.bmp', '.webp'}
 
     # Scan PlantVillage
     if pv_path.exists():
-        for folder in _get_target_folders(pv_path):
+        direct_subdirs = [p for p in pv_path.iterdir() if p.is_dir()]
+        target_folders = []
+        for d in direct_subdirs:
+            if d.name.lower() in ("train", "test", "val", "validation"):
+                target_folders.extend([p for p in d.iterdir() if p.is_dir()])
+            else:
+                target_folders.append(d)
+
+        for folder in target_folders:
             canon = resolve_folder_to_canonical(folder.name, domain="pv")
             if canon:
                 num_imgs = len([f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in valid_exts])
                 pv_counts[canon] += num_imgs
                     
-    # Scan PlantDoc (flat or nested train/test folders)
+    # Scan PlantDoc (directly inspecting nested train/test/val subfolders)
     if pd_path.exists():
-        for folder in _get_target_folders(pd_path):
+        direct_subdirs = [p for p in pd_path.iterdir() if p.is_dir()]
+        target_folders = []
+        for d in direct_subdirs:
+            if d.name.lower() in ("train", "test", "val", "validation"):
+                target_folders.extend([p for p in d.iterdir() if p.is_dir()])
+            else:
+                target_folders.append(d)
+
+        for folder in target_folders:
             canon = resolve_folder_to_canonical(folder.name, domain="pd")
             if canon:
                 num_imgs = len([f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in valid_exts])
@@ -550,12 +568,52 @@ def export_mapping_json(output_path: str):
     print(f"[INFO] Exported mapping metadata to {output_path}")
 
 
+def get_default_dataset_paths() -> Tuple[str, str]:
+    """
+    Resolves default paths for PlantVillage and PlantDoc tailored for VSC wICE cluster
+    and local development environments.
+    """
+    vsc_data = os.environ.get("VSC_DATA", "")
+    
+    # 1. Check VSC_DATA environment variable
+    if vsc_data:
+        vsc_pv = os.path.join(vsc_data, "datasets", "PlantVillage")
+        vsc_pd = os.path.join(vsc_data, "datasets", "PlantDoc")
+        if Path(vsc_pv).exists() and Path(vsc_pd).exists():
+            return vsc_pv, vsc_pd
+
+    # 2. Check standard VSC user path (/data/leuven/393/vsc39394/datasets)
+    vsc_std_pv = "/data/leuven/393/vsc39394/datasets/PlantVillage"
+    vsc_std_pd = "/data/leuven/393/vsc39394/datasets/PlantDoc"
+    if Path(vsc_std_pv).exists() and Path(vsc_std_pd).exists():
+        return vsc_std_pv, vsc_std_pd
+
+    # 3. Check local relative paths (data/PlantVillage, data/PlantDoc)
+    for pv_cand in ("data/PlantVillage", "../datasets/PlantVillage"):
+        if Path(pv_cand).exists():
+            for pd_cand in ("data/PlantDoc", "data/plantdoc", "../datasets/PlantDoc"):
+                if Path(pd_cand).exists():
+                    return pv_cand, pd_cand
+
+    # Default fallback matching VSC standard structure
+    return (
+        os.path.join(vsc_data, "datasets", "PlantVillage") if vsc_data else "data/PlantVillage",
+        os.path.join(vsc_data, "datasets", "PlantDoc") if vsc_data else "data/PlantDoc"
+    )
+
+
 if __name__ == "__main__":
+    default_pv, default_pd = get_default_dataset_paths()
+
     parser = argparse.ArgumentParser(description="Audit and export class mappings between PlantVillage and PlantDoc.")
-    parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage root directory")
-    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc root directory")
+    parser.add_argument("--pv_dir", type=str, default=default_pv, help="Path to PlantVillage root directory")
+    parser.add_argument("--pd_dir", type=str, default=default_pd, help="Path to PlantDoc root directory")
     parser.add_argument("--export_json", type=str, default="", help="Path to export JSON mapping specification")
     args = parser.parse_args()
+
+    # Expand any environment variables such as $VSC_DATA
+    args.pv_dir = os.path.expandvars(os.path.expanduser(args.pv_dir))
+    args.pd_dir = os.path.expandvars(os.path.expanduser(args.pd_dir))
 
     if args.export_json:
         export_mapping_json(args.export_json)
@@ -569,7 +627,7 @@ if __name__ == "__main__":
         print(f"[INFO] Running alignment audit on available dataset(s)...")
         verify_dataset_alignment(args.pv_dir, args.pd_dir, verbose=True)
     else:
-        print(f"[INFO] Datasets not found at default paths ('{args.pv_dir}', '{args.pd_dir}').")
+        print(f"[INFO] Datasets not found at paths ('{args.pv_dir}', '{args.pd_dir}').")
         print(f"Loaded {len(CANONICAL_MAPPING)} canonical shared classes:")
         for idx, name in enumerate(get_canonical_class_list()):
             print(f"  [{idx:02d}] {name} ({CANONICAL_MAPPING[name]['description']})")

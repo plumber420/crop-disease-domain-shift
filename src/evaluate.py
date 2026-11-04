@@ -202,7 +202,7 @@ def parse_args():
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to trained model checkpoint (.pt)")
     parser.add_argument("--model_name", type=str, default="", help="Architecture ('resnet50' or 'swin_t'). If empty, reads from checkpoint.")
     parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="PlantVillage source dataset root directory")
-    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="PlantDoc target field dataset root directory")
+    parser.add_argument("--pd_dir", type=str, default="data/PlantDoc", help="PlantDoc target field dataset root directory")
     parser.add_argument("--split_manifest", type=str, default="data/dataset_splits.json", help="Path to persistent dataset split manifest JSON")
     parser.add_argument("--output_dir", type=str, default="experiments/evaluation_results", help="Directory to save report and figures")
     parser.add_argument("--batch_size", type=int, default=32, help="Inference batch size")
@@ -213,6 +213,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.pv_dir = os.path.expandvars(os.path.expanduser(args.pv_dir))
+    args.pd_dir = os.path.expandvars(os.path.expanduser(args.pd_dir))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     out_dir = Path(args.output_dir)

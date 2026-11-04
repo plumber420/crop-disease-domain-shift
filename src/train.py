@@ -171,7 +171,7 @@ def parse_args():
     
     # Dataset and paths
     parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage root directory")
-    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc root directory (optional validation tracking)")
+    parser.add_argument("--pd_dir", type=str, default="data/PlantDoc", help="Path to PlantDoc root directory (optional validation tracking)")
     parser.add_argument("--split_manifest", type=str, default="data/dataset_splits.json", help="Path to persistent dataset split manifest JSON")
     parser.add_argument("--output_dir", type=str, default="experiments/outputs", help="Directory to save logs and checkpoints")
     parser.add_argument("--experiment_name", type=str, default="resnet50_baseline", help="Unique identifier for experiment")
@@ -207,6 +207,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.pv_dir = os.path.expandvars(os.path.expanduser(args.pv_dir))
+    args.pd_dir = os.path.expandvars(os.path.expanduser(args.pd_dir)) if args.pd_dir else ""
     set_seed(args.seed)
 
     use_amp = not args.no_amp and torch.cuda.is_available()

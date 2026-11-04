@@ -48,14 +48,18 @@ REPO_ROOT="${SLURM_SUBMIT_DIR}"
 cd "${REPO_ROOT}"
 mkdir -p slurm/logs experiments/evaluation_results
 
-PV_DIR="${PV_DIR:-${REPO_ROOT}/data/PlantVillage}"
-if [ ! -d "${PV_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantVillage" ]; then
-    PV_DIR="${VSC_DATA}/datasets/PlantVillage"
+# Dataset Locations on VSC cluster (with fallback to local repo data/ folder)
+PV_DIR="${VSC_DATA}/datasets/PlantVillage"
+PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+
+if [ ! -d "${PV_DIR}" ] && [ -d "${REPO_ROOT}/data/PlantVillage" ]; then
+    PV_DIR="${REPO_ROOT}/data/PlantVillage"
 fi
 
-PD_DIR="${PD_DIR:-${REPO_ROOT}/data/plantdoc}"
-if [ ! -d "${PD_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantDoc" ]; then
-    PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+if [ ! -d "${PD_DIR}" ] && [ -d "${REPO_ROOT}/data/PlantDoc" ]; then
+    PD_DIR="${REPO_ROOT}/data/PlantDoc"
+elif [ ! -d "${PD_DIR}" ] && [ -d "${REPO_ROOT}/data/plantdoc" ]; then
+    PD_DIR="${REPO_ROOT}/data/plantdoc"
 fi
 
 check_and_eval () {
