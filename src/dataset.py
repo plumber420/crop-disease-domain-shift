@@ -150,32 +150,24 @@ class MappedCropDataset(Dataset):
         if not self.root_dir.is_dir():
             raise FileNotFoundError(f"Root dataset directory does not exist: {self.root_dir}")
 
-        # Scan for subdirectories
-        subdirs = [p for p in self.root_dir.iterdir() if p.is_dir()]
-        
-        # If no subdirs, scan recursively
-        if not subdirs:
-            print(f"[WARN] No subdirectories found in {self.root_dir}. Scanning for images recursively.")
-            all_imgs = [p for p in self.root_dir.rglob("*") if p.suffix.lower() in VALID_EXTENSIONS]
-            for img_path in all_imgs:
-                folder_name = img_path.parent.name
-                canonical = resolve_folder_to_canonical(folder_name, domain=self.domain)
-                if canonical and canonical in self.allowed_classes:
-                    class_id = self.canonical_to_id[canonical]
-                    self.samples.append((img_path, class_id, canonical))
-            return
+        direct_subdirs = [p for p in self.root_dir.iterdir() if p.is_dir()]
+        target_folders = []
 
-        for folder in subdirs:
+        for d in direct_subdirs:
+            if d.name.lower() in ("train", "test", "val", "validation"):
+                target_folders.extend([p for p in d.iterdir() if p.is_dir()])
+            else:
+                target_folders.append(d)
+
+        for folder in target_folders:
             canonical = resolve_folder_to_canonical(folder.name, domain=self.domain)
             if canonical is not None and canonical in self.allowed_classes:
                 class_id = self.canonical_to_id[canonical]
-                imgs = [p for p in folder.iterdir() if p.is_dir() is False and p.suffix.lower() in VALID_EXTENSIONS]
+                imgs = [p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in VALID_EXTENSIONS]
                 for img_p in imgs:
                     self.samples.append((img_p, class_id, canonical))
 
-        # Sort samples for reproducibility across environments
         self.samples.sort(key=lambda x: str(x[0]))
-        
         if len(self.samples) == 0:
             print(f"[WARN] 0 samples mapped in {self.root_dir} for domain '{self.domain}'. Check folder names.")
 
@@ -473,8 +465,8 @@ class SoftTargetCrossEntropy(nn.Module):
 
 
 def build_dataloaders(
-    pv_dir: str,
-    pd_dir: Optional[str] = None,
+    pv_dir: str = "data/PlantVillage",
+    pd_dir: Optional[str] = "data/plantdoc",
     split_manifest_path: Optional[str] = "data/dataset_splits.json",
     batch_size: int = 32,
     num_workers: int = 4,

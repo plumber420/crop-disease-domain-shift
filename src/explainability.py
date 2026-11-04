@@ -23,6 +23,7 @@ Author: KU Leuven / VSC Deep Learning Project
 
 import os
 import sys
+import math
 import glob
 import random
 import argparse
@@ -68,18 +69,20 @@ from data.dataset_mapping import (
 )
 
 
-def swin_reshape_transform(tensor: torch.Tensor, height: int = 7, width: int = 7) -> torch.Tensor:
+def swin_reshape_transform(tensor: torch.Tensor, height: Optional[int] = None, width: Optional[int] = None) -> torch.Tensor:
     """
     Transforms Swin Transformer activations/gradients from sequence [B, H*W, C] 
     or channels-last format [B, H, W, C] to standard spatial tensor format [B, C, H, W]
-    for 2D Grad-CAM backpropagation and pooling.
+    for 2D Grad-CAM backpropagation and pooling. Dynamically computes height and width from sequence length.
     """
     if tensor.ndim == 3:
-        # Sequence format: [B, H*W, C] -> [B, H, W, C] -> [B, C, H, W]
-        result = tensor.reshape(tensor.size(0), height, width, tensor.size(2))
+        B, N, C = tensor.shape
+        if height is None or width is None:
+            side = int(math.isqrt(N))
+            height, width = side, side
+        result = tensor.reshape(B, height, width, C)
         return result.permute(0, 3, 1, 2).contiguous()
     elif tensor.ndim == 4:
-        # Channels-last format: [B, H, W, C] -> [B, C, H, W]
         return tensor.permute(0, 3, 1, 2).contiguous()
     return tensor
 
@@ -423,8 +426,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Run Grad-CAM Explainability & Shortcut Learning Analysis.")
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to model checkpoint (.pt)")
     parser.add_argument("--model_name", type=str, default="resnet50", choices=["resnet50", "swin_t"], help="Architecture ('resnet50' or 'swin_t')")
-    parser.add_argument("--pv_dir", type=str, default="", help="Path to PlantVillage directory (Lab domain)")
-    parser.add_argument("--pd_dir", type=str, default="", help="Path to PlantDoc directory (Field domain)")
+    parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage directory (Lab domain)")
+    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc directory (Field domain)")
     parser.add_argument("--image_path", type=str, default="", help="Optional single image path for targeted attribution")
     parser.add_argument("--output_dir", type=str, default="experiments/gradcam_analysis", help="Directory to save visual explanations")
     parser.add_argument("--num_samples", type=int, default=6, help="Number of random samples to visualize per domain")

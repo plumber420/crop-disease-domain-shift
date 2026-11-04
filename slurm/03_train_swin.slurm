@@ -48,9 +48,16 @@ REPO_ROOT="${SLURM_SUBMIT_DIR}"
 cd "${REPO_ROOT}"
 mkdir -p slurm/logs experiments/outputs
 
-# Dataset Locations in $VSC_DATA
-PV_DIR="${VSC_DATA}/datasets/PlantVillage"
-PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+# Dataset Locations: checks local repo data/ folder first, then $VSC_DATA
+PV_DIR="${PV_DIR:-${REPO_ROOT}/data/PlantVillage}"
+if [ ! -d "${PV_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantVillage" ]; then
+    PV_DIR="${VSC_DATA}/datasets/PlantVillage"
+fi
+
+PD_DIR="${PD_DIR:-${REPO_ROOT}/data/plantdoc}"
+if [ ! -d "${PD_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantDoc" ]; then
+    PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+fi
 
 if [ ! -d "${PV_DIR}" ]; then
     echo "[ERROR] PlantVillage dataset directory not found at: ${PV_DIR}"

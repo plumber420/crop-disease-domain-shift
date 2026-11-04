@@ -1,33 +1,114 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# ==============================================================================
+# .gitignore - Crop Disease Domain Shift Repository
+# ==============================================================================
 
-# PyTorch checkpoints and training outputs
+# ------------------------------------------------------------------------------
+# Datasets & Raw Image Data (Never upload dataset images to GitHub)
+# ------------------------------------------------------------------------------
+# Image formats
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.webp
+*.tif
+*.tiff
+*.JPG
+*.JPEG
+*.PNG
+*.BMP
+*.WEBP
+
+# Dataset directories
+data/PlantVillage/
+data/plantVillage/
+data/plantdoc/
+data/PlantDoc/
+data/raw/
+data/*_raw/
+data/processed/
+datasets/
+plantdoc/
+PlantVillage/
+
+# Archives & compressed datasets
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Ensure source code and mapping configs in data/ ARE tracked
+!data/dataset_mapping.py
+!data/*.json
+!data/README.md
+!data/.gitkeep
+
+# ------------------------------------------------------------------------------
+# PyTorch Checkpoints & Experiment Artifacts
+# ------------------------------------------------------------------------------
 experiments/
 outputs/
+checkpoints/
 *.pt
 *.pth
 *.ckpt
+*.bin
+*.onnx
 
-# SLURM logs
+# ------------------------------------------------------------------------------
+# SLURM Logs & Cluster Outputs
+# ------------------------------------------------------------------------------
 slurm/logs/
 *.out
 *.err
+*.log
 
-# Datasets & virtualenvs
-datasets/
+# ------------------------------------------------------------------------------
+# Python & Virtual Environments
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments & caches
 venvs/
 .venv/
 env/
+ENV/
+env.bak/
+venv.bak/
+.cache/
 
-# IDE & OS files
+# ------------------------------------------------------------------------------
+# IDE, Editor & OS metadata
+# ------------------------------------------------------------------------------
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-
-*.zip
-datasets/
-__pycache__/
-.cache/

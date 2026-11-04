@@ -170,8 +170,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Train Crop Disease Classifier on VSC Cluster.")
     
     # Dataset and paths
-    parser.add_argument("--pv_dir", type=str, required=True, help="Path to PlantVillage root directory")
-    parser.add_argument("--pd_dir", type=str, default="", help="Path to PlantDoc root directory (optional validation tracking)")
+    parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage root directory")
+    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc root directory (optional validation tracking)")
     parser.add_argument("--split_manifest", type=str, default="data/dataset_splits.json", help="Path to persistent dataset split manifest JSON")
     parser.add_argument("--output_dir", type=str, default="experiments/outputs", help="Directory to save logs and checkpoints")
     parser.add_argument("--experiment_name", type=str, default="resnet50_baseline", help="Unique identifier for experiment")

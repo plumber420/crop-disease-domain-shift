@@ -48,8 +48,15 @@ REPO_ROOT="${SLURM_SUBMIT_DIR}"
 cd "${REPO_ROOT}"
 mkdir -p slurm/logs experiments/evaluation_results
 
-PV_DIR="${VSC_DATA}/datasets/PlantVillage"
-PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+PV_DIR="${PV_DIR:-${REPO_ROOT}/data/PlantVillage}"
+if [ ! -d "${PV_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantVillage" ]; then
+    PV_DIR="${VSC_DATA}/datasets/PlantVillage"
+fi
+
+PD_DIR="${PD_DIR:-${REPO_ROOT}/data/plantdoc}"
+if [ ! -d "${PD_DIR}" ] && [ -d "${VSC_DATA}/datasets/PlantDoc" ]; then
+    PD_DIR="${VSC_DATA}/datasets/PlantDoc"
+fi
 
 check_and_eval () {
     local MODEL_NAME=$1

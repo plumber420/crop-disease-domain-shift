@@ -27,18 +27,30 @@ from pathlib import Path
 # Structure: canonical_name -> {"pv_candidates": [...], "pd_candidates": [...], "description": str}
 CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     "apple_scab": {
-        "pv_candidates": ["Apple___Apple_scab", "apple_scab", "Apple_scab"],
-        "pd_candidates": ["Apple Scab Leaf", "Apple_Scab_Leaf", "apple scab leaf", "Apple scab"],
+        "pv_candidates": [
+            "Apple___Apple_scab", "apple_scab", "Apple_scab", "Apple_Apple_scab"
+        ],
+        "pd_candidates": [
+            "Apple Scab Leaf", "Apple_Scab_Leaf", "apple scab leaf", "Apple scab", "Apple_scab"
+        ],
         "description": "Apple - Scab (Venturia inaequalis)",
     },
     "apple_rust": {
-        "pv_candidates": ["Apple___Cedar_apple_rust", "Apple_cedar_apple_rust", "apple_rust"],
-        "pd_candidates": ["Apple rust leaf", "Apple_rust_leaf", "apple rust leaf"],
+        "pv_candidates": [
+            "Apple___Cedar_apple_rust", "Apple_cedar_apple_rust", "apple_rust", "Apple_Cedar_apple_rust"
+        ],
+        "pd_candidates": [
+            "Apple rust leaf", "Apple_rust_leaf", "apple rust leaf", "Apple_rust"
+        ],
         "description": "Apple - Cedar Apple Rust (Gymnosporangium juniperi-virginianae)",
     },
     "apple_healthy": {
-        "pv_candidates": ["Apple___healthy", "Apple_healthy", "apple_healthy"],
-        "pd_candidates": ["Apple leaf", "Apple_leaf", "apple leaf", "Apple Leaf"],
+        "pv_candidates": [
+            "Apple___healthy", "Apple_healthy", "apple_healthy"
+        ],
+        "pd_candidates": [
+            "Apple leaf", "Apple_leaf", "apple leaf", "Apple Leaf", "Apple_healthy"
+        ],
         "description": "Apple - Healthy Leaf",
     },
     "bell_pepper_bacterial_spot": {
@@ -46,7 +58,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
             "Pepper,_bell___Bacterial_spot",
             "Pepper__bell___Bacterial_spot",
             "Pepper_bell_bacterial_spot",
-            "Pepper_bacterial_spot"
+            "Pepper_bacterial_spot",
+            "Pepper_bell_Bacterial_spot"
         ],
         "pd_candidates": [
             "Bell_pepper leaf spot",
@@ -90,7 +103,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
             "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
             "Corn___Cercospora_leaf_spot Gray_leaf_spot",
             "Corn_Cercospora_leaf_spot",
-            "Corn_gray_leaf_spot"
+            "Corn_gray_leaf_spot",
+            "Corn_Gray_leaf_spot"
         ],
         "pd_candidates": [
             "Corn Gray leaf spot",
@@ -103,7 +117,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
         "pv_candidates": [
             "Corn_(maize)___Northern_Leaf_Blight",
             "Corn___Northern_Leaf_Blight",
-            "Corn_Northern_Leaf_Blight"
+            "Corn_Northern_Leaf_Blight",
+            "Corn_leaf_blight"
         ],
         "pd_candidates": [
             "Corn leaf blight",
@@ -118,7 +133,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
             "Corn_(maize)___Common_rust_",
             "Corn_(maize)___Common_rust",
             "Corn___Common_rust_",
-            "Corn_Common_rust"
+            "Corn_Common_rust",
+            "Corn_rust"
         ],
         "pd_candidates": [
             "Corn rust leaf",
@@ -134,22 +150,25 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
             "grape leaf black rot",
             "Grape leaf black rot",
             "Grape_leaf_black_rot",
+            "grape_leaf_black_rot",
             "grape leaf rot"
         ],
         "description": "Grape - Black Rot (Guignardia bidwellii)",
     },
     "grape_healthy": {
         "pv_candidates": ["Grape___healthy", "Grape_healthy", "grape_healthy"],
-        "pd_candidates": ["grape leaf", "Grape leaf", "Grape_leaf"],
+        "pd_candidates": ["grape leaf", "Grape leaf", "Grape_leaf", "grape_leaf"],
         "description": "Grape - Healthy Leaf",
     },
     "peach_healthy": {
         "pv_candidates": ["Peach___healthy", "Peach_healthy", "peach_healthy"],
-        "pd_candidates": ["Peach leaf", "Peach_leaf", "peach leaf"],
+        "pd_candidates": ["Peach leaf", "Peach_leaf", "peach leaf", "Peach_leaf"],
         "description": "Peach - Healthy Leaf",
     },
     "potato_early_blight": {
-        "pv_candidates": ["Potato___Early_blight", "Potato_early_blight", "potato_early_blight"],
+        "pv_candidates": [
+            "Potato___Early_blight", "Potato_early_blight", "potato_early_blight", "Potato_Early_blight"
+        ],
         "pd_candidates": [
             "Potato leaf early blight",
             "Potato_leaf_early_blight",
@@ -158,7 +177,9 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
         "description": "Potato - Early Blight (Alternaria solani)",
     },
     "potato_late_blight": {
-        "pv_candidates": ["Potato___Late_blight", "Potato_late_blight", "potato_late_blight"],
+        "pv_candidates": [
+            "Potato___Late_blight", "Potato_late_blight", "potato_late_blight", "Potato_Late_blight"
+        ],
         "pd_candidates": [
             "Potato leaf late blight",
             "Potato_leaf_late_blight",
@@ -208,7 +229,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
         "pv_candidates": [
             "Tomato___Bacterial_spot",
             "Tomato_bacterial_spot",
-            "tomato_bacterial_spot"
+            "tomato_bacterial_spot",
+            "Tomato_Bacterial_spot"
         ],
         "pd_candidates": [
             "Tomato leaf bacterial spot",
@@ -219,17 +241,28 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
         "description": "Tomato - Bacterial Spot (Xanthomonas)",
     },
     "tomato_early_blight": {
-        "pv_candidates": ["Tomato___Early_blight", "Tomato_early_blight", "tomato_early_blight"],
+        "pv_candidates": [
+            "Tomato___Early_blight",
+            "Tomato_early_blight",
+            "tomato_early_blight",
+            "Tomato_Early_blight"
+        ],
         "pd_candidates": [
             "Tomato Early blight leaf",
             "Tomato_Early_blight_leaf",
             "Tomato leaf early blight",
+            "Tomato_leaf_early_blight",
             "tomato early blight leaf"
         ],
         "description": "Tomato - Early Blight (Alternaria solani)",
     },
     "tomato_late_blight": {
-        "pv_candidates": ["Tomato___Late_blight", "Tomato_late_blight", "tomato_late_blight"],
+        "pv_candidates": [
+            "Tomato___Late_blight",
+            "Tomato_late_blight",
+            "tomato_late_blight",
+            "Tomato_Late_blight"
+        ],
         "pd_candidates": [
             "Tomato leaf late blight",
             "Tomato_leaf_late_blight",
@@ -238,15 +271,26 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
         "description": "Tomato - Late Blight (Phytophthora infestans)",
     },
     "tomato_leaf_mold": {
-        "pv_candidates": ["Tomato___Leaf_Mold", "Tomato_leaf_mold", "tomato_leaf_mold"],
-        "pd_candidates": ["Tomato mold leaf", "Tomato_mold_leaf", "tomato mold leaf"],
+        "pv_candidates": [
+            "Tomato___Leaf_Mold",
+            "Tomato_leaf_mold",
+            "tomato_leaf_mold",
+            "Tomato_Leaf_Mold"
+        ],
+        "pd_candidates": [
+            "Tomato mold leaf",
+            "Tomato_mold_leaf",
+            "Tomato_leaf_mold",
+            "tomato mold leaf"
+        ],
         "description": "Tomato - Leaf Mold (Passalora fulva)",
     },
     "tomato_septoria_leaf_spot": {
         "pv_candidates": [
             "Tomato___Septoria_leaf_spot",
             "Tomato_septoria_leaf_spot",
-            "tomato_septoria_leaf_spot"
+            "tomato_septoria_leaf_spot",
+            "Tomato_Septoria_leaf_spot"
         ],
         "pd_candidates": [
             "Tomato Septoria leaf spot",
@@ -257,6 +301,8 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     },
     "tomato_spider_mites": {
         "pv_candidates": [
+            "Tomato_Spider_mites_Two_spotted_spider_mites",
+            "Tomato_Spider_mites_Two_spotted_spider_mite",
             "Tomato___Spider_mites Two-spotted_spider_mite",
             "Tomato_spider_mites",
             "Tomato___Spider_mites"
@@ -271,6 +317,7 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     "tomato_mosaic_virus": {
         "pv_candidates": [
             "Tomato___Tomato_mosaic_virus",
+            "Tomato__Tomato_mosaic_virus",
             "Tomato_mosaic_virus",
             "tomato_mosaic_virus"
         ],
@@ -283,29 +330,45 @@ CANONICAL_MAPPING: Dict[str, Dict[str, List[str]]] = {
     },
     "tomato_yellow_leaf_curl_virus": {
         "pv_candidates": [
+            "Tomato_Tomato_YellowLeaf__Curl_Virus",
+            "Tomato__Tomato_YellowLeaf__Curl_Virus",
+            "Tomato_Tomato_Yellow_Leaf_Curl_Virus",
+            "Tomato__Tomato_Yellow_Leaf_Curl_Virus",
             "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
-            "Tomato_yellow_leaf_curl_virus"
+            "Tomato_yellow_leaf_curl_virus",
+            "tomato_yellow_leaf_curl_virus"
         ],
         "pd_candidates": [
             "Tomato leaf yellow virus",
             "Tomato_leaf_yellow_virus",
-            "Tomato yellow leaf curl virus"
+            "Tomato yellow leaf curl virus",
+            "Tomato_yellow_leaf_curl_virus"
         ],
         "description": "Tomato - Yellow Leaf Curl Virus",
     },
     "tomato_healthy": {
-        "pv_candidates": ["Tomato___healthy", "Tomato_healthy", "tomato_healthy"],
-        "pd_candidates": ["Tomato leaf", "Tomato_leaf", "tomato leaf"],
+        "pv_candidates": [
+            "Tomato___healthy",
+            "Tomato_healthy",
+            "tomato_healthy"
+        ],
+        "pd_candidates": [
+            "Tomato leaf",
+            "Tomato_leaf",
+            "tomato leaf"
+        ],
         "description": "Tomato - Healthy Leaf",
     },
 }
 
 
 def normalize_string(name: str) -> str:
-    """Normalize string for fuzzy/robust directory name matching."""
+    """
+    Normalize string for fuzzy/robust directory name matching.
+    Collapses multiple consecutive underscores, hyphens, and whitespace into a single underscore.
+    """
     s = name.lower()
-    s = s.replace("___", "_").replace("__", "_")
-    s = s.replace("-", "_").replace(" ", "_")
+    s = re.sub(r"[_\s\-]+", "_", s)
     s = re.sub(r"[(),]", "", s)
     s = re.sub(r"_leaf$", "", s)
     s = re.sub(r"_leaves$", "", s)
@@ -363,10 +426,27 @@ def resolve_folder_to_canonical(folder_name: str, domain: str = "auto") -> Optio
     return None
 
 
+def _get_target_folders(root_path: Path) -> List[Path]:
+    """
+    Discovers class folders under root_path, inspecting nested subdirectories
+    if standard split folders ('train', 'test', 'val', 'validation') are present.
+    """
+    if not root_path.is_dir():
+        return []
+    direct_subdirs = [p for p in root_path.iterdir() if p.is_dir()]
+    target_folders = []
+    for d in direct_subdirs:
+        if d.name.lower() in ("train", "test", "val", "validation"):
+            target_folders.extend([p for p in d.iterdir() if p.is_dir()])
+        else:
+            target_folders.append(d)
+    return target_folders
+
+
 def build_dataset_mapping_dict(dataset_dir: str, domain: str = "auto") -> Dict[str, int]:
     """
     Scans a dataset directory and returns a dictionary mapping existing folder paths
-    (relative or absolute) to their canonical integer class ID [0, C-1].
+    to their canonical integer class ID [0, C-1].
     Any folders not matching an overlapping canonical class are excluded.
     """
     path = Path(dataset_dir)
@@ -376,9 +456,7 @@ def build_dataset_mapping_dict(dataset_dir: str, domain: str = "auto") -> Dict[s
     canonical_to_id = get_canonical_name_to_id()
     folder_to_id: Dict[str, int] = {}
     
-    # List subdirectories (representing classes in standard ImageFolder)
-    subdirs = [p for p in path.iterdir() if p.is_dir()]
-    
+    subdirs = _get_target_folders(path)
     for subdir in subdirs:
         canonical = resolve_folder_to_canonical(subdir.name, domain=domain)
         if canonical is not None:
@@ -405,23 +483,23 @@ def verify_dataset_alignment(
     pv_counts: Dict[str, int] = {k: 0 for k in canonical_to_id.keys()}
     pd_counts: Dict[str, int] = {k: 0 for k in canonical_to_id.keys()}
     
+    valid_exts = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
     # Scan PlantVillage
     if pv_path.exists():
-        for item in pv_path.iterdir():
-            if item.is_dir():
-                canon = resolve_folder_to_canonical(item.name, domain="pv")
-                if canon:
-                    num_imgs = len([f for f in item.iterdir() if f.suffix.lower() in ('.jpg', '.jpeg', '.png')])
-                    pv_counts[canon] += num_imgs
+        for folder in _get_target_folders(pv_path):
+            canon = resolve_folder_to_canonical(folder.name, domain="pv")
+            if canon:
+                num_imgs = len([f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in valid_exts])
+                pv_counts[canon] += num_imgs
                     
-    # Scan PlantDoc
+    # Scan PlantDoc (flat or nested train/test folders)
     if pd_path.exists():
-        for item in pd_path.iterdir():
-            if item.is_dir():
-                canon = resolve_folder_to_canonical(item.name, domain="pd")
-                if canon:
-                    num_imgs = len([f for f in item.iterdir() if f.suffix.lower() in ('.jpg', '.jpeg', '.png')])
-                    pd_counts[canon] += num_imgs
+        for folder in _get_target_folders(pd_path):
+            canon = resolve_folder_to_canonical(folder.name, domain="pd")
+            if canon:
+                num_imgs = len([f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in valid_exts])
+                pd_counts[canon] += num_imgs
                     
     # Classes with samples in both domains
     active_common_classes = {
@@ -432,6 +510,8 @@ def verify_dataset_alignment(
     if verbose:
         print("\n" + "=" * 80)
         print(" DATASET ALIGNMENT AUDIT: PlantVillage (Lab) <--> PlantDoc (Field)")
+        print(f" Source (PV): {pv_path.resolve()}")
+        print(f" Target (PD): {pd_path.resolve()}")
         print("=" * 80)
         print(f"{'Class ID':<8} {'Canonical Class Name':<32} {'PV (Lab)':<12} {'PD (Field)':<12} {'Aligned?'}")
         print("-" * 80)
@@ -472,17 +552,24 @@ def export_mapping_json(output_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Audit and export class mappings between PlantVillage and PlantDoc.")
-    parser.add_argument("--pv_dir", type=str, default="", help="Path to PlantVillage root directory")
-    parser.add_argument("--pd_dir", type=str, default="", help="Path to PlantDoc root directory")
+    parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage root directory")
+    parser.add_argument("--pd_dir", type=str, default="data/plantdoc", help="Path to PlantDoc root directory")
     parser.add_argument("--export_json", type=str, default="", help="Path to export JSON mapping specification")
     args = parser.parse_args()
 
     if args.export_json:
         export_mapping_json(args.export_json)
         
-    if args.pv_dir and args.pd_dir:
+    pv_exists = Path(args.pv_dir).exists()
+    pd_exists = Path(args.pd_dir).exists()
+
+    if pv_exists and pd_exists:
+        verify_dataset_alignment(args.pv_dir, args.pd_dir, verbose=True)
+    elif pv_exists or pd_exists:
+        print(f"[INFO] Running alignment audit on available dataset(s)...")
         verify_dataset_alignment(args.pv_dir, args.pd_dir, verbose=True)
     else:
-        print(f"Loaded {len(CANONICAL_MAPPING)} canonical shared classes.")
+        print(f"[INFO] Datasets not found at default paths ('{args.pv_dir}', '{args.pd_dir}').")
+        print(f"Loaded {len(CANONICAL_MAPPING)} canonical shared classes:")
         for idx, name in enumerate(get_canonical_class_list()):
             print(f"  [{idx:02d}] {name} ({CANONICAL_MAPPING[name]['description']})")
