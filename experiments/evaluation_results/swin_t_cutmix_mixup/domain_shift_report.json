@@ -1,0 +1,437 @@
+{
+    "model_architecture": "swin_t",
+    "checkpoint_path": "/vsc-hard-mounts/leuven-data/393/vsc39394/crop-disease-domain-shift/experiments/outputs/swin_t_cutmix_mixup/checkpoints/best_checkpoint.pt",
+    "source_domain": {
+        "dataset": "PlantVillage",
+        "accuracy": 0.9986192613047981,
+        "macro_f1": 0.9988591670139103,
+        "weighted_f1": 0.9986191707023585,
+        "macro_precision": 0.9988375394249902,
+        "macro_recall": 0.9988866074885239,
+        "total_samples": 2897,
+        "per_class": {
+            "apple_healthy": {
+                "class_id": 0,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "apple_rust": {
+                "class_id": 1,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "apple_scab": {
+                "class_id": 2,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "bell_pepper_bacterial_spot": {
+                "class_id": 3,
+                "precision": 0.993421052631579,
+                "recall": 1.0,
+                "f1": 0.9966996699669967,
+                "support": 151
+            },
+            "bell_pepper_healthy": {
+                "class_id": 4,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 223
+            },
+            "blueberry_healthy": {
+                "class_id": 5,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "cherry_healthy": {
+                "class_id": 6,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "corn_gray_leaf_spot": {
+                "class_id": 7,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "corn_leaf_blight": {
+                "class_id": 8,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "corn_rust": {
+                "class_id": 9,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "grape_black_rot": {
+                "class_id": 10,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "grape_healthy": {
+                "class_id": 11,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "peach_healthy": {
+                "class_id": 12,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "potato_early_blight": {
+                "class_id": 13,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 150
+            },
+            "potato_healthy": {
+                "class_id": 14,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 24
+            },
+            "potato_late_blight": {
+                "class_id": 15,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 150
+            },
+            "raspberry_healthy": {
+                "class_id": 16,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "soybean_healthy": {
+                "class_id": 17,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "squash_powdery_mildew": {
+                "class_id": 18,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "strawberry_healthy": {
+                "class_id": 19,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "tomato_bacterial_spot": {
+                "class_id": 20,
+                "precision": 0.9937888198757764,
+                "recall": 1.0,
+                "f1": 0.9968847352024922,
+                "support": 320
+            },
+            "tomato_early_blight": {
+                "class_id": 21,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 150
+            },
+            "tomato_healthy": {
+                "class_id": 22,
+                "precision": 1.0,
+                "recall": 0.9958333333333333,
+                "f1": 0.9979123173277662,
+                "support": 240
+            },
+            "tomato_late_blight": {
+                "class_id": 23,
+                "precision": 0.9965156794425087,
+                "recall": 0.9965156794425087,
+                "f1": 0.9965156794425087,
+                "support": 287
+            },
+            "tomato_leaf_mold": {
+                "class_id": 24,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 144
+            },
+            "tomato_mosaic_virus": {
+                "class_id": 25,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 57
+            },
+            "tomato_septoria_leaf_spot": {
+                "class_id": 26,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 267
+            },
+            "tomato_spider_mites": {
+                "class_id": 27,
+                "precision": 1.0,
+                "recall": 0.9920634920634921,
+                "f1": 0.9960159362549801,
+                "support": 252
+            },
+            "tomato_yellow_leaf_curl_virus": {
+                "class_id": 28,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 482
+            }
+        }
+    },
+    "target_domain": {
+        "dataset": "PlantDoc",
+        "accuracy": 0.16153319644079397,
+        "macro_f1": 0.0809886707251832,
+        "weighted_f1": 0.12312498460510873,
+        "macro_precision": 0.10833174505236462,
+        "macro_recall": 0.13929449226505147,
+        "total_samples": 2922,
+        "per_class": {
+            "apple_healthy": {
+                "class_id": 0,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 88
+            },
+            "apple_rust": {
+                "class_id": 1,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 106
+            },
+            "apple_scab": {
+                "class_id": 2,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 93
+            },
+            "bell_pepper_bacterial_spot": {
+                "class_id": 3,
+                "precision": 0.17708333333333334,
+                "recall": 0.40963855421686746,
+                "f1": 0.24727272727272728,
+                "support": 83
+            },
+            "bell_pepper_healthy": {
+                "class_id": 4,
+                "precision": 0.04845222072678331,
+                "recall": 0.8571428571428571,
+                "f1": 0.09171974522292993,
+                "support": 42
+            },
+            "blueberry_healthy": {
+                "class_id": 5,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 117
+            },
+            "cherry_healthy": {
+                "class_id": 6,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 57
+            },
+            "corn_gray_leaf_spot": {
+                "class_id": 7,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 67
+            },
+            "corn_leaf_blight": {
+                "class_id": 8,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 194
+            },
+            "corn_rust": {
+                "class_id": 9,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 117
+            },
+            "grape_black_rot": {
+                "class_id": 10,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 79
+            },
+            "grape_healthy": {
+                "class_id": 11,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 75
+            },
+            "peach_healthy": {
+                "class_id": 12,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 112
+            },
+            "potato_early_blight": {
+                "class_id": 13,
+                "precision": 0.38202247191011235,
+                "recall": 0.19883040935672514,
+                "f1": 0.26153846153846155,
+                "support": 171
+            },
+            "potato_healthy": {
+                "class_id": 14,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 0
+            },
+            "potato_late_blight": {
+                "class_id": 15,
+                "precision": 0.41025641025641024,
+                "recall": 0.15384615384615385,
+                "f1": 0.22377622377622378,
+                "support": 208
+            },
+            "raspberry_healthy": {
+                "class_id": 16,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 119
+            },
+            "soybean_healthy": {
+                "class_id": 17,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 65
+            },
+            "squash_powdery_mildew": {
+                "class_id": 18,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 130
+            },
+            "strawberry_healthy": {
+                "class_id": 19,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 96
+            },
+            "tomato_bacterial_spot": {
+                "class_id": 20,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 110
+            },
+            "tomato_early_blight": {
+                "class_id": 21,
+                "precision": 0.15699658703071673,
+                "recall": 0.5227272727272727,
+                "f1": 0.24146981627296588,
+                "support": 88
+            },
+            "tomato_healthy": {
+                "class_id": 22,
+                "precision": 0.08333333333333333,
+                "recall": 0.019230769230769232,
+                "f1": 0.03125,
+                "support": 52
+            },
+            "tomato_late_blight": {
+                "class_id": 23,
+                "precision": 0.08808290155440414,
+                "recall": 0.7657657657657657,
+                "f1": 0.1579925650557621,
+                "support": 111
+            },
+            "tomato_leaf_mold": {
+                "class_id": 24,
+                "precision": 0.2857142857142857,
+                "recall": 0.04395604395604396,
+                "f1": 0.0761904761904762,
+                "support": 91
+            },
+            "tomato_mosaic_virus": {
+                "class_id": 25,
+                "precision": 0.5,
+                "recall": 0.037037037037037035,
+                "f1": 0.06896551724137931,
+                "support": 54
+            },
+            "tomato_septoria_leaf_spot": {
+                "class_id": 26,
+                "precision": 0.3076923076923077,
+                "recall": 0.5859872611464968,
+                "f1": 0.40350877192982454,
+                "support": 157
+            },
+            "tomato_spider_mites": {
+                "class_id": 27,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 2
+            },
+            "tomato_yellow_leaf_curl_virus": {
+                "class_id": 28,
+                "precision": 0.7019867549668874,
+                "recall": 0.44537815126050423,
+                "f1": 0.5449871465295629,
+                "support": 238
+            }
+        }
+    },
+    "domain_shift_analysis": {
+        "delta_accuracy": 0.837086064864004,
+        "delta_macro_f1": 0.9178704962887271,
+        "f1_retention_percentage": 8.108117079938191
+    }
+}

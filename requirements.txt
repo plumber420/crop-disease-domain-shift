@@ -4,7 +4,7 @@ torchvision>=0.15.0
 timm>=0.9.7
 
 # Explainability & Interpretability (ResNet-50 & Swin Transformer Grad-CAM)
-pytorch-grad-cam>=0.2.1
+# pytorch-grad-cam>=0.2.1
 
 # Data Processing & Analysis (albumentations removed to save VSC storage quota)
 numpy>=1.23.0

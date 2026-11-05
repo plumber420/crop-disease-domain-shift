@@ -1,0 +1,483 @@
+{
+    "classes": [
+        {
+            "id": 0,
+            "canonical_name": "apple_healthy",
+            "description": "Apple - Healthy Leaf",
+            "pv_candidates": [
+                "Apple___healthy",
+                "Apple_healthy",
+                "apple_healthy"
+            ],
+            "pd_candidates": [
+                "Apple leaf",
+                "Apple_leaf",
+                "apple leaf",
+                "Apple Leaf",
+                "Apple_healthy"
+            ]
+        },
+        {
+            "id": 1,
+            "canonical_name": "apple_rust",
+            "description": "Apple - Cedar Apple Rust (Gymnosporangium juniperi-virginianae)",
+            "pv_candidates": [
+                "Apple___Cedar_apple_rust",
+                "Apple_cedar_apple_rust",
+                "apple_rust",
+                "Apple_Cedar_apple_rust"
+            ],
+            "pd_candidates": [
+                "Apple rust leaf",
+                "Apple_rust_leaf",
+                "apple rust leaf",
+                "Apple_rust"
+            ]
+        },
+        {
+            "id": 2,
+            "canonical_name": "apple_scab",
+            "description": "Apple - Scab (Venturia inaequalis)",
+            "pv_candidates": [
+                "Apple___Apple_scab",
+                "apple_scab",
+                "Apple_scab",
+                "Apple_Apple_scab"
+            ],
+            "pd_candidates": [
+                "Apple Scab Leaf",
+                "Apple_Scab_Leaf",
+                "apple scab leaf",
+                "Apple scab",
+                "Apple_scab"
+            ]
+        },
+        {
+            "id": 3,
+            "canonical_name": "bell_pepper_bacterial_spot",
+            "description": "Bell Pepper - Bacterial Spot (Xanthomonas)",
+            "pv_candidates": [
+                "Pepper,_bell___Bacterial_spot",
+                "Pepper__bell___Bacterial_spot",
+                "Pepper_bell_bacterial_spot",
+                "Pepper_bacterial_spot",
+                "Pepper_bell_Bacterial_spot"
+            ],
+            "pd_candidates": [
+                "Bell_pepper leaf spot",
+                "Bell_pepper_leaf_spot",
+                "Bell pepper leaf spot",
+                "bell pepper leaf spot"
+            ]
+        },
+        {
+            "id": 4,
+            "canonical_name": "bell_pepper_healthy",
+            "description": "Bell Pepper - Healthy Leaf",
+            "pv_candidates": [
+                "Pepper,_bell___healthy",
+                "Pepper__bell___healthy",
+                "Pepper_bell_healthy",
+                "Pepper_healthy"
+            ],
+            "pd_candidates": [
+                "Bell_pepper leaf",
+                "Bell_pepper_leaf",
+                "Bell pepper leaf",
+                "bell pepper leaf"
+            ]
+        },
+        {
+            "id": 5,
+            "canonical_name": "blueberry_healthy",
+            "description": "Blueberry - Healthy Leaf",
+            "pv_candidates": [
+                "Blueberry___healthy",
+                "Blueberry_healthy",
+                "blueberry_healthy"
+            ],
+            "pd_candidates": [
+                "Blueberry leaf",
+                "Blueberry_leaf",
+                "blueberry leaf"
+            ]
+        },
+        {
+            "id": 6,
+            "canonical_name": "cherry_healthy",
+            "description": "Cherry - Healthy Leaf",
+            "pv_candidates": [
+                "Cherry_(including_sour)___healthy",
+                "Cherry___healthy",
+                "Cherry_healthy"
+            ],
+            "pd_candidates": [
+                "Cherry leaf",
+                "Cherry_leaf",
+                "cherry leaf"
+            ]
+        },
+        {
+            "id": 7,
+            "canonical_name": "corn_gray_leaf_spot",
+            "description": "Corn - Gray Leaf Spot (Cercospora zeae-maydis)",
+            "pv_candidates": [
+                "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+                "Corn___Cercospora_leaf_spot Gray_leaf_spot",
+                "Corn_Cercospora_leaf_spot",
+                "Corn_gray_leaf_spot",
+                "Corn_Gray_leaf_spot"
+            ],
+            "pd_candidates": [
+                "Corn Gray leaf spot",
+                "Corn_Gray_leaf_spot",
+                "corn gray leaf spot"
+            ]
+        },
+        {
+            "id": 8,
+            "canonical_name": "corn_leaf_blight",
+            "description": "Corn - Northern Leaf Blight (Exserohilum turcicum)",
+            "pv_candidates": [
+                "Corn_(maize)___Northern_Leaf_Blight",
+                "Corn___Northern_Leaf_Blight",
+                "Corn_Northern_Leaf_Blight",
+                "Corn_leaf_blight"
+            ],
+            "pd_candidates": [
+                "Corn leaf blight",
+                "Corn_leaf_blight",
+                "corn leaf blight",
+                "Corn Northern leaf blight"
+            ]
+        },
+        {
+            "id": 9,
+            "canonical_name": "corn_rust",
+            "description": "Corn - Common Rust (Puccinia sorghi)",
+            "pv_candidates": [
+                "Corn_(maize)___Common_rust_",
+                "Corn_(maize)___Common_rust",
+                "Corn___Common_rust_",
+                "Corn_Common_rust",
+                "Corn_rust"
+            ],
+            "pd_candidates": [
+                "Corn rust leaf",
+                "Corn_rust_leaf",
+                "corn rust leaf",
+                "Corn Common rust"
+            ]
+        },
+        {
+            "id": 10,
+            "canonical_name": "grape_black_rot",
+            "description": "Grape - Black Rot (Guignardia bidwellii)",
+            "pv_candidates": [
+                "Grape___Black_rot",
+                "Grape_black_rot",
+                "grape_black_rot"
+            ],
+            "pd_candidates": [
+                "grape leaf black rot",
+                "Grape leaf black rot",
+                "Grape_leaf_black_rot",
+                "grape_leaf_black_rot",
+                "grape leaf rot"
+            ]
+        },
+        {
+            "id": 11,
+            "canonical_name": "grape_healthy",
+            "description": "Grape - Healthy Leaf",
+            "pv_candidates": [
+                "Grape___healthy",
+                "Grape_healthy",
+                "grape_healthy"
+            ],
+            "pd_candidates": [
+                "grape leaf",
+                "Grape leaf",
+                "Grape_leaf",
+                "grape_leaf"
+            ]
+        },
+        {
+            "id": 12,
+            "canonical_name": "peach_healthy",
+            "description": "Peach - Healthy Leaf",
+            "pv_candidates": [
+                "Peach___healthy",
+                "Peach_healthy",
+                "peach_healthy"
+            ],
+            "pd_candidates": [
+                "Peach leaf",
+                "Peach_leaf",
+                "peach leaf",
+                "Peach_leaf"
+            ]
+        },
+        {
+            "id": 13,
+            "canonical_name": "potato_early_blight",
+            "description": "Potato - Early Blight (Alternaria solani)",
+            "pv_candidates": [
+                "Potato___Early_blight",
+                "Potato_early_blight",
+                "potato_early_blight",
+                "Potato_Early_blight"
+            ],
+            "pd_candidates": [
+                "Potato leaf early blight",
+                "Potato_leaf_early_blight",
+                "potato leaf early blight"
+            ]
+        },
+        {
+            "id": 14,
+            "canonical_name": "potato_healthy",
+            "description": "Potato - Healthy Leaf",
+            "pv_candidates": [
+                "Potato___healthy",
+                "Potato_healthy",
+                "potato_healthy"
+            ],
+            "pd_candidates": [
+                "Potato leaf",
+                "Potato_leaf",
+                "potato leaf"
+            ]
+        },
+        {
+            "id": 15,
+            "canonical_name": "potato_late_blight",
+            "description": "Potato - Late Blight (Phytophthora infestans)",
+            "pv_candidates": [
+                "Potato___Late_blight",
+                "Potato_late_blight",
+                "potato_late_blight",
+                "Potato_Late_blight"
+            ],
+            "pd_candidates": [
+                "Potato leaf late blight",
+                "Potato_leaf_late_blight",
+                "potato leaf late blight"
+            ]
+        },
+        {
+            "id": 16,
+            "canonical_name": "raspberry_healthy",
+            "description": "Raspberry - Healthy Leaf",
+            "pv_candidates": [
+                "Raspberry___healthy",
+                "Raspberry_healthy",
+                "raspberry_healthy"
+            ],
+            "pd_candidates": [
+                "Raspberry leaf",
+                "Raspberry_leaf",
+                "raspberry leaf"
+            ]
+        },
+        {
+            "id": 17,
+            "canonical_name": "soybean_healthy",
+            "description": "Soybean - Healthy Leaf",
+            "pv_candidates": [
+                "Soybean___healthy",
+                "Soybean_healthy",
+                "soybean_healthy"
+            ],
+            "pd_candidates": [
+                "Soyabean leaf",
+                "Soybean leaf",
+                "Soyabean_leaf",
+                "soyabean leaf"
+            ]
+        },
+        {
+            "id": 18,
+            "canonical_name": "squash_powdery_mildew",
+            "description": "Squash - Powdery Mildew (Podosphaera xanthii)",
+            "pv_candidates": [
+                "Squash___Powdery_mildew",
+                "Squash_powdery_mildew",
+                "squash_powdery_mildew"
+            ],
+            "pd_candidates": [
+                "Squash Powdery mildew leaf",
+                "Squash_Powdery_mildew_leaf",
+                "squash powdery mildew leaf"
+            ]
+        },
+        {
+            "id": 19,
+            "canonical_name": "strawberry_healthy",
+            "description": "Strawberry - Healthy Leaf",
+            "pv_candidates": [
+                "Strawberry___healthy",
+                "Strawberry_healthy",
+                "strawberry_healthy"
+            ],
+            "pd_candidates": [
+                "Strawberry leaf",
+                "Strawberry_leaf",
+                "strawberry leaf"
+            ]
+        },
+        {
+            "id": 20,
+            "canonical_name": "tomato_bacterial_spot",
+            "description": "Tomato - Bacterial Spot (Xanthomonas)",
+            "pv_candidates": [
+                "Tomato___Bacterial_spot",
+                "Tomato_bacterial_spot",
+                "tomato_bacterial_spot",
+                "Tomato_Bacterial_spot"
+            ],
+            "pd_candidates": [
+                "Tomato leaf bacterial spot",
+                "Tomato_leaf_bacterial_spot",
+                "Tomato leaf spot",
+                "tomato leaf bacterial spot"
+            ]
+        },
+        {
+            "id": 21,
+            "canonical_name": "tomato_early_blight",
+            "description": "Tomato - Early Blight (Alternaria solani)",
+            "pv_candidates": [
+                "Tomato___Early_blight",
+                "Tomato_early_blight",
+                "tomato_early_blight",
+                "Tomato_Early_blight"
+            ],
+            "pd_candidates": [
+                "Tomato Early blight leaf",
+                "Tomato_Early_blight_leaf",
+                "Tomato leaf early blight",
+                "Tomato_leaf_early_blight",
+                "tomato early blight leaf"
+            ]
+        },
+        {
+            "id": 22,
+            "canonical_name": "tomato_healthy",
+            "description": "Tomato - Healthy Leaf",
+            "pv_candidates": [
+                "Tomato___healthy",
+                "Tomato_healthy",
+                "tomato_healthy"
+            ],
+            "pd_candidates": [
+                "Tomato leaf",
+                "Tomato_leaf",
+                "tomato leaf"
+            ]
+        },
+        {
+            "id": 23,
+            "canonical_name": "tomato_late_blight",
+            "description": "Tomato - Late Blight (Phytophthora infestans)",
+            "pv_candidates": [
+                "Tomato___Late_blight",
+                "Tomato_late_blight",
+                "tomato_late_blight",
+                "Tomato_Late_blight"
+            ],
+            "pd_candidates": [
+                "Tomato leaf late blight",
+                "Tomato_leaf_late_blight",
+                "tomato leaf late blight"
+            ]
+        },
+        {
+            "id": 24,
+            "canonical_name": "tomato_leaf_mold",
+            "description": "Tomato - Leaf Mold (Passalora fulva)",
+            "pv_candidates": [
+                "Tomato___Leaf_Mold",
+                "Tomato_leaf_mold",
+                "tomato_leaf_mold",
+                "Tomato_Leaf_Mold"
+            ],
+            "pd_candidates": [
+                "Tomato mold leaf",
+                "Tomato_mold_leaf",
+                "Tomato_leaf_mold",
+                "tomato mold leaf"
+            ]
+        },
+        {
+            "id": 25,
+            "canonical_name": "tomato_mosaic_virus",
+            "description": "Tomato - Mosaic Virus",
+            "pv_candidates": [
+                "Tomato__Tomato_mosaic_virus",
+                "Tomato_Tomato_mosaic_virus",
+                "Tomato___Tomato_mosaic_virus",
+                "Tomato_mosaic_virus",
+                "tomato_mosaic_virus"
+            ],
+            "pd_candidates": [
+                "Tomato leaf mosaic virus",
+                "Tomato_leaf_mosaic_virus",
+                "tomato leaf mosaic virus"
+            ]
+        },
+        {
+            "id": 26,
+            "canonical_name": "tomato_septoria_leaf_spot",
+            "description": "Tomato - Septoria Leaf Spot (Septoria lycopersici)",
+            "pv_candidates": [
+                "Tomato___Septoria_leaf_spot",
+                "Tomato_septoria_leaf_spot",
+                "tomato_septoria_leaf_spot",
+                "Tomato_Septoria_leaf_spot"
+            ],
+            "pd_candidates": [
+                "Tomato Septoria leaf spot",
+                "Tomato_Septoria_leaf_spot",
+                "tomato septoria leaf spot"
+            ]
+        },
+        {
+            "id": 27,
+            "canonical_name": "tomato_spider_mites",
+            "description": "Tomato - Two-Spotted Spider Mites (Tetranychus urticae)",
+            "pv_candidates": [
+                "Tomato_Spider_mites_Two_spotted_spider_mite",
+                "Tomato_Spider_mites_Two_spotted_spider_mites",
+                "Tomato___Spider_mites Two-spotted_spider_mite",
+                "Tomato_spider_mites",
+                "Tomato___Spider_mites"
+            ],
+            "pd_candidates": [
+                "Tomato two spotted spider mites leaf",
+                "Tomato_two_spotted_spider_mites_leaf",
+                "tomato two spotted spider mites leaf"
+            ]
+        },
+        {
+            "id": 28,
+            "canonical_name": "tomato_yellow_leaf_curl_virus",
+            "description": "Tomato - Yellow Leaf Curl Virus",
+            "pv_candidates": [
+                "Tomato__Tomato_YellowLeaf__Curl_Virus",
+                "Tomato_Tomato_YellowLeaf__Curl_Virus",
+                "Tomato__Tomato_Yellow_Leaf_Curl_Virus",
+                "Tomato_Tomato_Yellow_Leaf_Curl_Virus",
+                "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+                "Tomato_yellow_leaf_curl_virus",
+                "tomato_yellow_leaf_curl_virus"
+            ],
+            "pd_candidates": [
+                "Tomato leaf yellow virus",
+                "Tomato_leaf_yellow_virus",
+                "Tomato yellow leaf curl virus",
+                "Tomato_yellow_leaf_curl_virus"
+            ]
+        }
+    ]
+}

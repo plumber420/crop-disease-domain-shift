@@ -48,7 +48,7 @@ PlantVillage/
 # ------------------------------------------------------------------------------
 # PyTorch Checkpoints & Experiment Artifacts
 # ------------------------------------------------------------------------------
-experiments/
+experiments/outputs/
 outputs/
 checkpoints/
 *.pt
@@ -112,3 +112,21 @@ venv.bak/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Allow evaluation metrics, confusion matrices, and Grad-CAM maps
+!experiments/evaluation_results/
+!experiments/evaluation_results/**
+!experiments/gradcam_analysis/
+!experiments/gradcam_analysis/**
+!experiments/**/*.png
+!experiments/**/*.json
+!experiments/**/*.csv
+
+# Explicitly unignore metrics and figures
+!experiments/evaluation_results/
+!experiments/evaluation_results/**
+!experiments/gradcam_analysis/
+!experiments/gradcam_analysis/**
+!experiments/**/*.png
+!experiments/**/*.json
+!experiments/**/*.csv
