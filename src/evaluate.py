@@ -52,6 +52,7 @@ from data.dataset_mapping import (
     get_canonical_class_list,
     get_canonical_name_to_id,
     get_id_to_canonical_name,
+    get_active_common_classes,
 )
 
 
@@ -96,17 +97,18 @@ def calculate_domain_metrics(
     class_names: List[str]
 ) -> Dict[str, Any]:
     """Computes aggregate and per-class classification metrics."""
+    labels = list(range(len(class_names)))
     acc = accuracy_score(y_true, y_pred)
     prec_macro, rec_macro, f1_macro, _ = precision_recall_fscore_support(
-        y_true, y_pred, average="macro", zero_division=0
+        y_true, y_pred, average="macro", labels=labels, zero_division=0
     )
     prec_weighted, rec_weighted, f1_weighted, _ = precision_recall_fscore_support(
-        y_true, y_pred, average="weighted", zero_division=0
+        y_true, y_pred, average="weighted", labels=labels, zero_division=0
     )
     
     # Per-class metrics
     p_cls, r_cls, f1_cls, support = precision_recall_fscore_support(
-        y_true, y_pred, average=None, labels=list(range(len(class_names))), zero_division=0
+        y_true, y_pred, average=None, labels=labels, zero_division=0
     )
     
     per_class_data = {}
@@ -233,7 +235,9 @@ def main():
     checkpoint = torch.load(args.checkpoint, map_location=device)
     model_name = args.model_name or checkpoint.get("model_name") or checkpoint.get("config", {}).get("model_name", "resnet50")
     
-    class_names = get_canonical_class_list()
+    class_names = checkpoint.get("class_names") or get_active_common_classes(args.pv_dir, args.pd_dir)
+    if not class_names:
+        raise RuntimeError(f"No active overlapping classes resolved between '{args.pv_dir}' and '{args.pd_dir}'.")
     num_classes = len(class_names)
 
     # 2. Reconstruct Model
@@ -252,11 +256,13 @@ def main():
         val_ratio=0.15,
         test_ratio=0.15,
         seed=args.seed,
+        allowed_classes=class_names,
     )
     test_pv_dataset = MappedCropDataset(
         args.pv_dir, 
         domain="pv", 
         transform=eval_transform, 
+        allowed_classes=class_names,
         samples_file_list=splits["test_pv"]
     )
     
@@ -269,7 +275,9 @@ def main():
     )
 
     # 4. Prepare Out-of-Domain Target Dataset (PlantDoc)
-    pd_dataset = MappedCropDataset(args.pd_dir, domain="pd", transform=eval_transform)
+    pd_dataset = MappedCropDataset(
+        args.pd_dir, domain="pd", transform=eval_transform, allowed_classes=class_names
+    )
     pd_test_loader = torch.utils.data.DataLoader(
         pd_dataset,
         batch_size=args.batch_size,

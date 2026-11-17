@@ -25,6 +25,7 @@ import os
 import sys
 import math
 import glob
+import json
 import random
 import argparse
 from pathlib import Path
@@ -57,6 +58,7 @@ if str(repo_root) not in sys.path:
 from src.dataset import (
     MappedCropDataset,
     get_transforms,
+    get_or_create_dataset_splits,
     IMAGENET_MEAN,
     IMAGENET_STD,
     VALID_EXTENSIONS,
@@ -65,6 +67,7 @@ from src.models import build_model
 from data.dataset_mapping import (
     get_canonical_class_list,
     get_id_to_canonical_name,
+    get_active_common_classes,
     resolve_folder_to_canonical,
 )
 
@@ -145,7 +148,7 @@ class NativeGradCAM:
 
         # Target score for backpropagation
         score = logits[0, target_class]
-        score.backward(retain_graph=True)
+        score.backward()
 
         activations = self.activations
         gradients = self.gradients
@@ -352,7 +355,7 @@ def visualize_explanation(
     axes[2].set_title(diag_summary, fontsize=9.5, color=status_color)
     axes[2].axis("off")
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.90])
     plt.savefig(output_path, dpi=250)
     plt.close()
     print(f"[INFO] Saved Grad-CAM figure to {output_path}")
@@ -370,33 +373,65 @@ def process_domain_samples(
     model_name: str = "resnet50",
     target_layer_name: str = "layer4[-1]",
     num_samples: int = 6,
+    num_metric_samples: int = 100,
+    split_manifest: str = "data/dataset_splits.json",
     device: torch.device = torch.device("cpu"),
 ):
-    """Samples images from a domain, generates Grad-CAM visualizations and shortcut reports."""
-    dataset_path = Path(dataset_dir)
+    """
+    Samples images from a domain (strictly from held-out test_pv for PlantVillage and
+    filtered to active shared classes), generates Grad-CAM visualizations, and exports
+    aggregated quantitative shortcut metrics to JSON.
+    """
+    dataset_path = Path(os.path.expandvars(os.path.expanduser(dataset_dir)))
     if not dataset_path.exists():
         print(f"[WARN] Directory not found for explainability: {dataset_dir}")
         return
 
-    all_img_paths = [p for p in dataset_path.rglob("*") if p.suffix.lower() in VALID_EXTENSIONS]
-    if not all_img_paths:
-        print(f"[WARN] No valid images found in {dataset_dir}")
+    allowed_set = set(class_names)
+    valid_samples: List[Tuple[Path, str]] = []
+
+    if domain == "pv":
+        splits = get_or_create_dataset_splits(
+            pv_dir=str(dataset_path),
+            manifest_path=split_manifest,
+            allowed_classes=class_names,
+        )
+        for rel_str in splits.get("test_pv", []):
+            img_path = dataset_path / rel_str
+            if not img_path.is_file():
+                continue
+            canon = resolve_folder_to_canonical(img_path.parent.name, domain="pv")
+            if canon and canon in allowed_set:
+                valid_samples.append((img_path, canon))
+    else:
+        all_img_paths = [
+            p for p in dataset_path.rglob("*")
+            if p.is_file() and p.suffix.lower() in VALID_EXTENSIONS
+        ]
+        for p in all_img_paths:
+            canon = resolve_folder_to_canonical(p.parent.name, domain=domain)
+            if canon and canon in allowed_set:
+                valid_samples.append((p, canon))
+
+    if not valid_samples:
+        print(f"[WARN] No valid images matching active classes found in {dataset_dir}")
         return
 
-    valid_samples = []
-    for p in all_img_paths:
-        canon = resolve_folder_to_canonical(p.parent.name, domain=domain)
-        if canon:
-            valid_samples.append((p, canon))
+    valid_samples.sort(key=lambda x: str(x[0]))
+    rng = random.Random(42)
+    rng.shuffle(valid_samples)
 
-    random.seed(42)
-    random.shuffle(valid_samples)
-    chosen_samples = valid_samples[:num_samples]
+    total_to_eval = min(len(valid_samples), max(num_samples, num_metric_samples))
+    chosen_samples = valid_samples[:total_to_eval]
 
     domain_label = "PlantVillage (Lab)" if domain == "pv" else "PlantDoc (Field)"
     is_field = (domain == "pd")
-    print(f"\n[INFO] Generating Grad-CAM for {len(chosen_samples)} samples in {domain_label} [{model_name.upper()}]...")
+    print(
+        f"\n[INFO] Running Grad-CAM for {total_to_eval} samples "
+        f"(rendering {min(num_samples, total_to_eval)} PNGs) in {domain_label} [{model_name.upper()}]..."
+    )
 
+    metric_records: List[Dict[str, float]] = []
     for i, (img_path, true_canon) in enumerate(chosen_samples):
         try:
             raw_img = Image.open(img_path).convert("RGB")
@@ -405,21 +440,50 @@ def process_domain_samples(
             cam, pred_id, conf = cam_engine.generate_cam(input_tensor)
             pred_canon = id_to_canonical.get(pred_id, f"Class_{pred_id}")
 
-            out_filename = output_subdir / f"{domain}_{model_name}_sample_{i+1:02d}_{true_canon}_pred_{pred_canon}.png"
-            visualize_explanation(
-                raw_image=raw_img,
-                cam=cam,
-                pred_name=pred_canon,
-                true_name=true_canon,
-                confidence=conf,
-                output_path=out_filename,
-                model_name=model_name,
-                target_layer_name=target_layer_name,
-                domain_tag=domain_label,
-                is_field_domain=is_field,
-            )
+            if i < num_metric_samples:
+                metric_records.append(compute_shortcut_metric(cam))
+
+            if i < num_samples:
+                out_filename = output_subdir / f"{domain}_{model_name}_sample_{i+1:02d}_{true_canon}_pred_{pred_canon}.png"
+                visualize_explanation(
+                    raw_image=raw_img,
+                    cam=cam,
+                    pred_name=pred_canon,
+                    true_name=true_canon,
+                    confidence=conf,
+                    output_path=out_filename,
+                    model_name=model_name,
+                    target_layer_name=target_layer_name,
+                    domain_tag=domain_label,
+                    is_field_domain=is_field,
+                )
         except Exception as e:
             print(f"[ERROR] Failed processing {img_path}: {e}")
+
+    if metric_records:
+        metric_keys = [
+            "center_focus_ratio",
+            "border_shortcut_ratio",
+            "focal_concentration",
+            "spatial_entropy",
+        ]
+        summary = {
+            "model_name": model_name,
+            "domain": domain,
+            "domain_label": domain_label,
+            "sample_count": len(metric_records),
+            "metrics": {
+                k: {
+                    "mean": float(np.mean([m[k] for m in metric_records])),
+                    "std": float(np.std([m[k] for m in metric_records])),
+                }
+                for k in metric_keys
+            },
+        }
+        summary_path = output_subdir.parent / f"{model_name}_{domain}_gradcam_summary.json"
+        with open(summary_path, "w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=4)
+        print(f"[INFO] Saved quantitative Grad-CAM summary ({len(metric_records)} samples) to {summary_path}")
 
 
 def parse_args():
@@ -428,9 +492,11 @@ def parse_args():
     parser.add_argument("--model_name", type=str, default="resnet50", choices=["resnet50", "swin_t"], help="Architecture ('resnet50' or 'swin_t')")
     parser.add_argument("--pv_dir", type=str, default="data/PlantVillage", help="Path to PlantVillage directory (Lab domain)")
     parser.add_argument("--pd_dir", type=str, default="data/PlantDoc", help="Path to PlantDoc directory (Field domain)")
+    parser.add_argument("--split_manifest", type=str, default="data/dataset_splits.json", help="Path to persistent dataset split manifest JSON")
     parser.add_argument("--image_path", type=str, default="", help="Optional single image path for targeted attribution")
     parser.add_argument("--output_dir", type=str, default="experiments/gradcam_analysis", help="Directory to save visual explanations")
     parser.add_argument("--num_samples", type=int, default=6, help="Number of random samples to visualize per domain")
+    parser.add_argument("--num_metric_samples", type=int, default=100, help="Number of samples per domain for aggregate shortcut metrics summary")
     return parser.parse_args()
 
 
@@ -442,14 +508,16 @@ def main():
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    class_names = get_canonical_class_list()
-    id_to_canonical = get_id_to_canonical_name()
-    num_classes = len(class_names)
-
-    # 1. Determine model architecture from checkpoint if not specified or override
+    # 1. Load checkpoint and determine model architecture & active classes
     checkpoint = torch.load(args.checkpoint, map_location=device)
     ckpt_model = checkpoint.get("model_name") or checkpoint.get("config", {}).get("model_name")
     model_name = args.model_name or ckpt_model or "resnet50"
+
+    class_names = checkpoint.get("class_names") or get_active_common_classes(args.pv_dir, args.pd_dir)
+    if not class_names:
+        class_names = get_canonical_class_list()
+    id_to_canonical = {idx: name for idx, name in enumerate(class_names)}
+    num_classes = len(class_names)
     
     print("=" * 80)
     print(" GRAD-CAM EXPLAINABILITY & SHORTCUT LEARNING AUDIT")
@@ -534,6 +602,8 @@ def main():
             model_name=model_name,
             target_layer_name=target_layer_name,
             num_samples=args.num_samples,
+            num_metric_samples=args.num_metric_samples,
+            split_manifest=args.split_manifest,
             device=device,
         )
 
@@ -552,6 +622,8 @@ def main():
             model_name=model_name,
             target_layer_name=target_layer_name,
             num_samples=args.num_samples,
+            num_metric_samples=args.num_metric_samples,
+            split_manifest=args.split_manifest,
             device=device,
         )
 

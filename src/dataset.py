@@ -41,6 +41,7 @@ if str(repo_root) not in sys.path:
 from data.dataset_mapping import (
     get_canonical_class_list,
     get_canonical_name_to_id,
+    get_active_common_classes,
     resolve_folder_to_canonical,
     CANONICAL_MAPPING,
 )
@@ -114,11 +115,18 @@ class MappedCropDataset(Dataset):
         self.root_dir = Path(os.path.expandvars(os.path.expanduser(str(root_dir))))
         self.domain = domain
         self.transform = transform
-        self.canonical_to_id = get_canonical_name_to_id()
-        
-        # If allowed_classes specified, only include this subset
-        self.allowed_classes = set(allowed_classes) if allowed_classes else set(self.canonical_to_id.keys())
-        
+
+        # When allowed_classes is specified, re-index contiguously 0..N-1
+        if allowed_classes is not None:
+            sorted_allowed = sorted(set(allowed_classes))
+            if not sorted_allowed:
+                raise ValueError("allowed_classes cannot be empty.")
+            self.allowed_classes = set(sorted_allowed)
+            self.canonical_to_id = {name: idx for idx, name in enumerate(sorted_allowed)}
+        else:
+            self.canonical_to_id = get_canonical_name_to_id()
+            self.allowed_classes = set(self.canonical_to_id.keys())
+
         self.samples: List[Tuple[Path, int, str]] = []  # (image_path, class_id, canonical_name)
         
         if samples_file_list is not None:
@@ -214,15 +222,16 @@ def get_or_create_dataset_splits(
     val_ratio: float = 0.15,
     test_ratio: float = 0.15,
     seed: int = 42,
-) -> Dict[str, List[str]]:
+    allowed_classes: Optional[List[str]] = None,
+) -> Dict[str, Any]:
     """
     Manages persistent dataset splits to guarantee ZERO silent data leakage between
     training, validation, and in-domain testing.
     
-    If the manifest JSON exists at manifest_path:
+    If the manifest JSON exists at manifest_path and matches allowed_classes:
         Loads and returns the exact pre-defined file lists.
-    If the manifest does not exist:
-        Computes a deterministic stratified split per canonical class, writes the JSON
+    If the manifest does not exist or active_classes mismatch:
+        Computes a deterministic stratified split per active class, writes the JSON
         manifest with relative POSIX paths, and returns the splits.
         
     Returns:
@@ -230,25 +239,29 @@ def get_or_create_dataset_splits(
     """
     pv_path = Path(os.path.expandvars(os.path.expanduser(str(pv_dir)))).resolve()
     manifest_file = Path(os.path.expandvars(os.path.expanduser(str(manifest_path)))).resolve()
+    expected_classes = sorted(set(allowed_classes)) if allowed_classes is not None else get_canonical_class_list()
 
     if manifest_file.exists():
         try:
             with open(manifest_file, "r", encoding="utf-8") as f:
                 splits = json.load(f)
             
-            # Check required keys
-            if all(k in splits for k in ("train", "val", "test_pv")):
+            # Check required keys and active_classes consistency
+            manifest_classes = splits.get("metadata", {}).get("active_classes")
+            if all(k in splits for k in ("train", "val", "test_pv")) and manifest_classes == expected_classes:
                 print(f"[INFO] Loaded persistent dataset splits from {manifest_file}")
-                print(f"       Split sizes: Train={len(splits['train'])}, Val={len(splits['val'])}, Test PV={len(splits['test_pv'])}")
+                print(f"       Split sizes: Train={len(splits['train'])}, Val={len(splits['val'])}, Test PV={len(splits['test_pv'])} ({len(expected_classes)} classes)")
                 return splits
+            elif all(k in splits for k in ("train", "val", "test_pv")):
+                print(f"[WARN] Manifest {manifest_file} active_classes mismatch or missing (expected {len(expected_classes)} classes). Regenerating...")
             else:
                 print(f"[WARN] Manifest {manifest_file} missing required keys. Regenerating...")
         except Exception as e:
             print(f"[WARN] Failed reading manifest {manifest_file}: {e}. Regenerating...")
 
     # Generate new stratified splits
-    print(f"[INFO] Scanning {pv_path} to create persistent dataset splits (seed={seed})...")
-    base_dataset = MappedCropDataset(pv_path, domain="pv")
+    print(f"[INFO] Scanning {pv_path} to create persistent dataset splits (seed={seed}, classes={len(expected_classes)})...")
+    base_dataset = MappedCropDataset(pv_path, domain="pv", allowed_classes=expected_classes)
     
     if len(base_dataset) == 0:
         raise RuntimeError(f"Cannot generate split: No valid samples found in {pv_path}")
@@ -291,7 +304,8 @@ def get_or_create_dataset_splits(
             "train_ratio": train_ratio,
             "val_ratio": val_ratio,
             "test_ratio": test_ratio,
-            "num_classes": len(get_canonical_class_list()),
+            "num_classes": len(expected_classes),
+            "active_classes": expected_classes,
             "train_samples": len(train_paths),
             "val_samples": len(val_paths),
             "test_pv_samples": len(test_pv_paths),
@@ -486,7 +500,17 @@ def build_dataloaders(
     """
     pv_dir = os.path.expandvars(os.path.expanduser(pv_dir))
     pd_dir = os.path.expandvars(os.path.expanduser(pd_dir)) if pd_dir else None
-    num_classes = len(get_canonical_class_list())
+
+    if pd_dir and Path(pd_dir).exists():
+        active_classes = get_active_common_classes(pv_dir, pd_dir)
+        if not active_classes:
+            raise RuntimeError(
+                f"No overlapping classes with >0 samples found between '{pv_dir}' and '{pd_dir}'."
+            )
+    else:
+        active_classes = get_canonical_class_list()
+
+    num_classes = len(active_classes)
     
     train_transform = get_transforms(img_size=img_size, is_training=True, heavy_aug=heavy_aug)
     eval_transform = get_transforms(img_size=img_size, is_training=False)
@@ -499,20 +523,37 @@ def build_dataloaders(
             val_ratio=0.15,
             test_ratio=0.15,
             seed=seed,
+            allowed_classes=active_classes,
         )
         pv_train_dataset = MappedCropDataset(
-            pv_dir, domain="pv", transform=train_transform, samples_file_list=splits["train"]
+            pv_dir,
+            domain="pv",
+            transform=train_transform,
+            allowed_classes=active_classes,
+            samples_file_list=splits["train"],
         )
         pv_val_dataset = MappedCropDataset(
-            pv_dir, domain="pv", transform=eval_transform, samples_file_list=splits["val"]
+            pv_dir,
+            domain="pv",
+            transform=eval_transform,
+            allowed_classes=active_classes,
+            samples_file_list=splits["val"],
         )
         pv_test_dataset = MappedCropDataset(
-            pv_dir, domain="pv", transform=eval_transform, samples_file_list=splits["test_pv"]
+            pv_dir,
+            domain="pv",
+            transform=eval_transform,
+            allowed_classes=active_classes,
+            samples_file_list=splits["test_pv"],
         )
     else:
         # Fallback to in-memory subset splitting
-        pv_train_dataset_full = MappedCropDataset(pv_dir, domain="pv", transform=train_transform)
-        pv_eval_dataset_full = MappedCropDataset(pv_dir, domain="pv", transform=eval_transform)
+        pv_train_dataset_full = MappedCropDataset(
+            pv_dir, domain="pv", transform=train_transform, allowed_classes=active_classes
+        )
+        pv_eval_dataset_full = MappedCropDataset(
+            pv_dir, domain="pv", transform=eval_transform, allowed_classes=active_classes
+        )
         
         pv_train_dataset, _, _ = create_stratified_split(
             pv_train_dataset_full, train_ratio=0.70, val_ratio=0.15, test_ratio=0.15, seed=seed
@@ -563,7 +604,9 @@ def build_dataloaders(
     
     test_pd_loader = None
     if pd_dir and Path(pd_dir).exists():
-        pd_dataset = MappedCropDataset(pd_dir, domain="pd", transform=eval_transform)
+        pd_dataset = MappedCropDataset(
+            pd_dir, domain="pd", transform=eval_transform, allowed_classes=active_classes
+        )
         test_pd_loader = DataLoader(
             pd_dataset,
             batch_size=batch_size,
@@ -577,7 +620,7 @@ def build_dataloaders(
         print("[WARN] PlantDoc target directory not provided or not found.")
 
     print(f"[INFO] Loaded PlantVillage Source splits: Train={len(pv_train_dataset)}, Val={len(pv_val_dataset)}, Test={len(pv_test_dataset)}")
-    print(f"[INFO] Classes aligned: {num_classes} canonical classes.")
+    print(f"[INFO] Classes aligned: {num_classes} active classes.")
     
     return {
         "train_loader": train_loader,
@@ -585,6 +628,7 @@ def build_dataloaders(
         "test_pv_loader": test_pv_loader,
         "test_pd_loader": test_pd_loader,
         "num_classes": num_classes,
+        "class_names": active_classes,
     }
 
 

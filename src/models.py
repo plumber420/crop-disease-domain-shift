@@ -137,13 +137,12 @@ def get_parameter_groups(
     head_decay = []
     head_no_decay = []
 
-    is_head_param = False
     for name, param in model.named_parameters():
         if not param.requires_grad:
             continue
             
         # Determine if parameter belongs to the classification head
-        if "fc" in name or "head" in name:
+        if name.startswith(("fc.", "head.")):
             if param.ndim <= 1 or name.endswith(".bias"):
                 head_no_decay.append(param)
             else:

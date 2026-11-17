@@ -62,6 +62,7 @@ def train_one_epoch(
     scaler: GradScaler,
     device: torch.device,
     epoch: int,
+    num_classes: int,
     use_amp: bool = True,
     use_cutmix_mixup: bool = False,
 ) -> Dict[str, float]:
@@ -107,7 +108,8 @@ def train_one_epoch(
 
     epoch_loss = running_loss / max(total_samples, 1)
     epoch_acc = accuracy_score(all_targets, all_preds)
-    epoch_f1 = f1_score(all_targets, all_preds, average="macro", zero_division=0)
+    labels = list(range(num_classes))
+    epoch_f1 = f1_score(all_targets, all_preds, average="macro", labels=labels, zero_division=0)
     elapsed = time.time() - start_time
 
     return {
@@ -124,6 +126,7 @@ def evaluate_loader(
     data_loader: torch.utils.data.DataLoader,
     criterion: nn.Module,
     device: torch.device,
+    num_classes: int,
     use_amp: bool = True,
 ) -> Dict[str, float]:
     """Evaluates the model on validation or test dataloader."""
@@ -156,7 +159,8 @@ def evaluate_loader(
 
     eval_loss = running_loss / max(total_samples, 1)
     eval_acc = accuracy_score(all_targets, all_preds)
-    eval_f1_macro = f1_score(all_targets, all_preds, average="macro", zero_division=0)
+    labels = list(range(num_classes))
+    eval_f1_macro = f1_score(all_targets, all_preds, average="macro", labels=labels, zero_division=0)
 
     return {
         "loss": eval_loss,
@@ -250,6 +254,7 @@ def main():
     val_loader = loaders["val_loader"]
     test_pd_loader = loaders["test_pd_loader"]
     num_classes = loaders["num_classes"]
+    class_names = loaders["class_names"]
 
     # 2. Build Model
     model = build_model(
@@ -322,6 +327,7 @@ def main():
             scaler=scaler,
             device=device,
             epoch=epoch,
+            num_classes=num_classes,
             use_amp=use_amp,
             use_cutmix_mixup=args.use_cutmix_mixup,
         )
@@ -332,6 +338,7 @@ def main():
             data_loader=val_loader,
             criterion=criterion,
             device=device,
+            num_classes=num_classes,
             use_amp=use_amp,
         )
 
@@ -343,6 +350,7 @@ def main():
                 data_loader=test_pd_loader,
                 criterion=criterion,
                 device=device,
+                num_classes=num_classes,
                 use_amp=use_amp,
             )
             pd_loss = pd_res["loss"]
@@ -372,6 +380,7 @@ def main():
         ckpt_state = {
             "epoch": epoch,
             "model_name": args.model_name,
+            "class_names": class_names,
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
             "scheduler_state_dict": scheduler.state_dict(),

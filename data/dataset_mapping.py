@@ -548,6 +548,15 @@ def verify_dataset_alignment(
     return pv_counts, pd_counts, active_common_classes
 
 
+def get_active_common_classes(pv_dir: str, pd_dir: str) -> List[str]:
+    """
+    Returns sorted list of canonical classes that have >0 images in BOTH
+    PlantVillage and PlantDoc, enforcing a strict closed-set alignment.
+    """
+    _, _, active_common = verify_dataset_alignment(pv_dir, pd_dir, verbose=False)
+    return sorted(list(active_common))
+
+
 def export_mapping_json(output_path: str):
     """Exports canonical mapping definition as JSON for reference and documentation."""
     canonical_to_id = get_canonical_name_to_id()
