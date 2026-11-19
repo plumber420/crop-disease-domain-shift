@@ -1,0 +1,24 @@
+{
+    "model_name": "swin_t",
+    "domain": "pd",
+    "domain_label": "PlantDoc (Field)",
+    "sample_count": 100,
+    "metrics": {
+        "center_focus_ratio": {
+            "mean": 0.7947891340780202,
+            "std": 0.08325779321208314
+        },
+        "border_shortcut_ratio": {
+            "mean": 0.20521086014035675,
+            "std": 0.08325778233713868
+        },
+        "focal_concentration": {
+            "mean": 0.33874583398754277,
+            "std": 0.06584965155211338
+        },
+        "spatial_entropy": {
+            "mean": 0.9419575599340494,
+            "std": 0.015259797735413555
+        }
+    }
+}

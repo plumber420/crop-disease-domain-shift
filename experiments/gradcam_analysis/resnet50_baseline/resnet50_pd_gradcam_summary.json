@@ -1,0 +1,24 @@
+{
+    "model_name": "resnet50",
+    "domain": "pd",
+    "domain_label": "PlantDoc (Field)",
+    "sample_count": 100,
+    "metrics": {
+        "center_focus_ratio": {
+            "mean": 0.706657270772614,
+            "std": 0.10323350502192336
+        },
+        "border_shortcut_ratio": {
+            "mean": 0.29334273466292554,
+            "std": 0.1032335031510434
+        },
+        "focal_concentration": {
+            "mean": 0.3407100347585934,
+            "std": 0.09108139347005711
+        },
+        "spatial_entropy": {
+            "mean": 0.9480067738672672,
+            "std": 0.021132205342404172
+        }
+    }
+}

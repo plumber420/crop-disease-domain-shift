@@ -1,0 +1,24 @@
+{
+    "model_name": "resnet50",
+    "domain": "pv",
+    "domain_label": "PlantVillage (Lab)",
+    "sample_count": 100,
+    "metrics": {
+        "center_focus_ratio": {
+            "mean": 0.8308500192774025,
+            "std": 0.06286659822032402
+        },
+        "border_shortcut_ratio": {
+            "mean": 0.16914997873726925,
+            "std": 0.06286659444716702
+        },
+        "focal_concentration": {
+            "mean": 0.3552011731295377,
+            "std": 0.08546730901297703
+        },
+        "spatial_entropy": {
+            "mean": 0.9453961617742563,
+            "std": 0.0181747215088655
+        }
+    }
+}

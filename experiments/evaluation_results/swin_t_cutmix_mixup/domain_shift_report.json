@@ -1,0 +1,213 @@
+{
+    "model_architecture": "swin_t",
+    "checkpoint_path": "/vsc-hard-mounts/leuven-data/393/vsc39394/crop-disease-domain-shift/experiments/outputs/swin_t_cutmix_mixup/checkpoints/best_checkpoint.pt",
+    "source_domain": {
+        "dataset": "PlantVillage",
+        "accuracy": 0.9965193177862861,
+        "macro_f1": 0.9967367237491425,
+        "weighted_f1": 0.9965179332415653,
+        "macro_precision": 0.9969745738086507,
+        "macro_recall": 0.99650798669982,
+        "total_samples": 2873,
+        "per_class": {
+            "bell_pepper_bacterial_spot": {
+                "class_id": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 151
+            },
+            "bell_pepper_healthy": {
+                "class_id": 1,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 223
+            },
+            "potato_early_blight": {
+                "class_id": 2,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 150
+            },
+            "potato_late_blight": {
+                "class_id": 3,
+                "precision": 1.0,
+                "recall": 0.9933333333333333,
+                "f1": 0.9966555183946488,
+                "support": 150
+            },
+            "tomato_bacterial_spot": {
+                "class_id": 4,
+                "precision": 0.9907120743034056,
+                "recall": 1.0,
+                "f1": 0.995334370139969,
+                "support": 320
+            },
+            "tomato_early_blight": {
+                "class_id": 5,
+                "precision": 0.9866666666666667,
+                "recall": 0.9866666666666667,
+                "f1": 0.9866666666666667,
+                "support": 150
+            },
+            "tomato_healthy": {
+                "class_id": 6,
+                "precision": 0.995850622406639,
+                "recall": 1.0,
+                "f1": 0.997920997920998,
+                "support": 240
+            },
+            "tomato_late_blight": {
+                "class_id": 7,
+                "precision": 0.9895104895104895,
+                "recall": 0.9860627177700348,
+                "f1": 0.987783595113438,
+                "support": 287
+            },
+            "tomato_leaf_mold": {
+                "class_id": 8,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 144
+            },
+            "tomato_mosaic_virus": {
+                "class_id": 9,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 57
+            },
+            "tomato_septoria_leaf_spot": {
+                "class_id": 10,
+                "precision": 1.0,
+                "recall": 0.9925093632958801,
+                "f1": 0.9962406015037594,
+                "support": 267
+            },
+            "tomato_spider_mites": {
+                "class_id": 11,
+                "precision": 1.0,
+                "recall": 0.996031746031746,
+                "f1": 0.9980119284294234,
+                "support": 252
+            },
+            "tomato_yellow_leaf_curl_virus": {
+                "class_id": 12,
+                "precision": 0.9979296066252588,
+                "recall": 1.0,
+                "f1": 0.9989637305699481,
+                "support": 482
+            }
+        }
+    },
+    "target_domain": {
+        "dataset": "PlantDoc",
+        "accuracy": 0.3461265103056148,
+        "macro_f1": 0.2636677315968435,
+        "weighted_f1": 0.3376037821804685,
+        "macro_precision": 0.3417170106442623,
+        "macro_recall": 0.31575991784507224,
+        "total_samples": 1407,
+        "per_class": {
+            "bell_pepper_bacterial_spot": {
+                "class_id": 0,
+                "precision": 0.46938775510204084,
+                "recall": 0.5542168674698795,
+                "f1": 0.5082872928176796,
+                "support": 83
+            },
+            "bell_pepper_healthy": {
+                "class_id": 1,
+                "precision": 0.2366412213740458,
+                "recall": 0.7380952380952381,
+                "f1": 0.3583815028901734,
+                "support": 42
+            },
+            "potato_early_blight": {
+                "class_id": 2,
+                "precision": 0.582089552238806,
+                "recall": 0.22807017543859648,
+                "f1": 0.3277310924369748,
+                "support": 171
+            },
+            "potato_late_blight": {
+                "class_id": 3,
+                "precision": 0.5714285714285714,
+                "recall": 0.34615384615384615,
+                "f1": 0.4311377245508982,
+                "support": 208
+            },
+            "tomato_bacterial_spot": {
+                "class_id": 4,
+                "precision": 0.09090909090909091,
+                "recall": 0.01818181818181818,
+                "f1": 0.030303030303030304,
+                "support": 110
+            },
+            "tomato_early_blight": {
+                "class_id": 5,
+                "precision": 0.2222222222222222,
+                "recall": 0.5227272727272727,
+                "f1": 0.31186440677966104,
+                "support": 88
+            },
+            "tomato_healthy": {
+                "class_id": 6,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 52
+            },
+            "tomato_late_blight": {
+                "class_id": 7,
+                "precision": 0.1751054852320675,
+                "recall": 0.7477477477477478,
+                "f1": 0.28376068376068375,
+                "support": 111
+            },
+            "tomato_leaf_mold": {
+                "class_id": 8,
+                "precision": 0.3125,
+                "recall": 0.054945054945054944,
+                "f1": 0.09345794392523364,
+                "support": 91
+            },
+            "tomato_mosaic_virus": {
+                "class_id": 9,
+                "precision": 0.375,
+                "recall": 0.05555555555555555,
+                "f1": 0.0967741935483871,
+                "support": 54
+            },
+            "tomato_septoria_leaf_spot": {
+                "class_id": 10,
+                "precision": 0.463855421686747,
+                "recall": 0.49044585987261147,
+                "f1": 0.47678018575851394,
+                "support": 157
+            },
+            "tomato_spider_mites": {
+                "class_id": 11,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 2
+            },
+            "tomato_yellow_leaf_curl_virus": {
+                "class_id": 12,
+                "precision": 0.9431818181818182,
+                "recall": 0.3487394957983193,
+                "f1": 0.50920245398773,
+                "support": 238
+            }
+        }
+    },
+    "domain_shift_analysis": {
+        "delta_accuracy": 0.6503928074806713,
+        "delta_macro_f1": 0.733068992152299,
+        "f1_retention_percentage": 26.453096922633613
+    }
+}

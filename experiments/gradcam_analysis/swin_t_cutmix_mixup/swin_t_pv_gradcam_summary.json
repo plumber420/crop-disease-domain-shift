@@ -1,0 +1,24 @@
+{
+    "model_name": "swin_t",
+    "domain": "pv",
+    "domain_label": "PlantVillage (Lab)",
+    "sample_count": 100,
+    "metrics": {
+        "center_focus_ratio": {
+            "mean": 0.859337996831226,
+            "std": 0.048174096124936006
+        },
+        "border_shortcut_ratio": {
+            "mean": 0.14066200225507297,
+            "std": 0.04817409408898553
+        },
+        "focal_concentration": {
+            "mean": 0.32633050682983117,
+            "std": 0.033103637511855535
+        },
+        "spatial_entropy": {
+            "mean": 0.9390642519003546,
+            "std": 0.008410648838714303
+        }
+    }
+}
